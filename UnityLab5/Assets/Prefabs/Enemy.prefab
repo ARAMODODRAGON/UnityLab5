@@ -55,15 +55,15 @@ MonoBehaviour:
     type: 3}
   spriteE: {fileID: 5559029388013025635, guid: 5e24d0cb76cc58f4aa61202af11baac0, type: 3}
   pathToFollow: {fileID: 0}
-  PERC: 0.001
+  PERC: 0.005
   SPEED_SLOW: 3
-  SPEED_FAST: 5
+  SPEED_FAST: 4
   TYPEA_MULTIPLIER: 1
-  TYPEB_MULTIPLIER: 1
-  TYPEC_MULTIPLIER: 1
-  TYPED_MULTIPLIER: 1
-  TYPEE_MULTIPLIER: 1
-  health: 1
+  TYPEB_MULTIPLIER: 1.3
+  TYPEC_MULTIPLIER: 1.6
+  TYPED_MULTIPLIER: 1.9
+  TYPEE_MULTIPLIER: 2.5
+  health: 3
 --- !u!212 &4479699613057196717
 SpriteRenderer:
   m_ObjectHideFlags: 0
