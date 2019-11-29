@@ -23,9 +23,15 @@ public class EnemySpawner : MonoBehaviour {
 	private Queue<EnemyBehaviour> inactiveEnemies;
 
 	// state
+	enum SpawnerState {
+		waitingToFinish,
+		spawning,
+		paused,
+	}
+
 	private int enemiesLeft = 0;
 	private int waveLevel = 0;
-	private bool activeSpawning = false;
+	private SpawnerState state = SpawnerState.paused;
 
 	// timers
 	private float timer = 0f;
@@ -45,7 +51,7 @@ public class EnemySpawner : MonoBehaviour {
 			// initialize it
 			eb.Init(this);
 			// hide in the higherarchy
-			// eb.gameObject.hideFlags = HideFlags.HideInHierarchy;
+			eb.gameObject.hideFlags = HideFlags.HideInHierarchy;
 			// add to inactive queue and allenemies list
 			inactiveEnemies.Enqueue(eb);
 
@@ -66,6 +72,9 @@ public class EnemySpawner : MonoBehaviour {
 
 		// spawn it
 		eb.EnableAndSpawnThis(type, pathToFollow);
+		
+		// show it
+		eb.gameObject.hideFlags = HideFlags.None;
 
 		return true;
 	}
@@ -76,6 +85,9 @@ public class EnemySpawner : MonoBehaviour {
 
 		// deactivate it
 		eb.gameObject.SetActive(false);
+
+		// hide it
+		eb.gameObject.hideFlags = HideFlags.HideInHierarchy;
 	}
 
 	public void StartWave(int level) {
@@ -87,12 +99,14 @@ public class EnemySpawner : MonoBehaviour {
 
 		// determin the number of enemies
 		enemiesLeft = 15 + ((level - 1) * 3);
+		if (enemiesLeft > ENEMIES_TO_POOL) enemiesLeft = ENEMIES_TO_POOL;
 
-		activeSpawning = true;
+		// make sure we know to be spawning
+		state = SpawnerState.spawning;
 	}
 
 	private void Update() {
-		if (activeSpawning) {
+		if (state == SpawnerState.spawning) {
 			// increase timer
 			timer += Time.deltaTime;
 			// spawn bullet
@@ -106,21 +120,20 @@ public class EnemySpawner : MonoBehaviour {
 			// end the wave if there are no more enemies to spawn
 			if (enemiesLeft == 0) {
 				Debug.Log("Wave has ended");
-				activeSpawning = false;
-				timer = 1.5f;
+				state = SpawnerState.waitingToFinish;
 			}
-		} else {
-			if (inactiveEnemies.Count == ENEMIES_TO_POOL) {
-				timer -= Time.deltaTime;
-				if (timer <= 0f) {
-					timer = 0f;
-					StartWave(waveLevel + 1);
-					Debug.Log("New wave started at level " + waveLevel);
-				}
-			}
+		} else if (state == SpawnerState.waitingToFinish && inactiveEnemies.Count == ENEMIES_TO_POOL) {
+			// change state again
+			state = SpawnerState.paused;
+
+			// call end wave
+			EndWave();
+
+			// TODO: remove this later
+			StartWave(waveLevel + 1);
+			Debug.Log("New wave started at level " + waveLevel);
+			// end remove
 		}
-
-
 	}
 
 	private void SpawnLogic() {
@@ -223,6 +236,6 @@ public class EnemySpawner : MonoBehaviour {
 	}
 
 	public void EndWave() {
-
+		// TODO: do stuff here
 	}
 }

@@ -44,6 +44,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	private float towerRangeSqr = 0f;
 	private int pathIndex = 0;
 	private Vector3 nextPoint;
+	public float timeAwake { get; private set; }
 
 	private void Awake() {
 		spr = GetComponent<SpriteRenderer>();
@@ -78,11 +79,17 @@ public class EnemyBehaviour : MonoBehaviour {
 		towerPos = Vector2.zero;
 		towerRangeSqr = 0f;
 
+		// reset this
+		timeAwake = 0f;
+
 		// finaly activate this
 		gameObject.SetActive(true);
 	}
 
 	private void Update() {
+		// increase on update
+		timeAwake += Time.deltaTime;
+
 		// get speed
 		float speed = (wasAttacked ? SPEED_FAST : SPEED_SLOW);
 
