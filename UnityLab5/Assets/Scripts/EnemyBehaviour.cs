@@ -163,7 +163,8 @@ public class EnemyBehaviour : MonoBehaviour {
 
 		health -= damage;
 		if (health <= 0) {
-			Destroy(gameObject);
+            enemySpawner.DespawnEnemy(this);
+            //Destroy(gameObject);
 			return true;
 		} else {
 			ChangeSpriteAndMultiplier();
