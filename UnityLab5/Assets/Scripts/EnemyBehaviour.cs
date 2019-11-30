@@ -120,7 +120,8 @@ public class EnemyBehaviour : MonoBehaviour {
 	}
 
 	private void ReachedEnd() {
-		enemySpawner.DespawnEnemy(this);
+        TowerManager.instance.EnemyIsDead(this.gameObject);
+        enemySpawner.DespawnEnemy(this);
 		// TODO: add any extra functionality
 	}
 
