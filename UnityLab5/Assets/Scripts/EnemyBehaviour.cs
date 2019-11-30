@@ -156,12 +156,13 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	// take damage
 	public bool TakeDamage(int damage, Vector2 towerPosition, float towerRange) {
+        Debug.Log("Got Damaged");
 		wasAttacked = true;
 		towerPos = towerPosition;
 		towerRangeSqr = towerRange * towerRange;
 
 		health -= damage;
-		if (health == 0) {
+		if (health <= 0) {
 			Destroy(gameObject);
 			return true;
 		} else {
