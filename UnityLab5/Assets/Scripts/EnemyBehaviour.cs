@@ -6,6 +6,9 @@ public class EnemyBehaviour : MonoBehaviour {
 	// ref to spawner
 	private EnemySpawner enemySpawner;
 
+    [HideInInspector]
+    public bool addedToTM = false; //When the enemy enters a tower's radius for the first time, it's added to the Tower Manager
+
 	// sprites
 	[SerializeField]
 	private Sprite spriteA;
