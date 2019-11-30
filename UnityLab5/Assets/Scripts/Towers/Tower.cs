@@ -6,7 +6,6 @@ public class Tower : MonoBehaviour
 {
     protected TowerManager tmInstance;
     protected ObjectPooler objPooler;
-    protected GameObject towerTarget;
 
     //Attack
     protected float startingTimeToNextAttack = 0.8f; //Can be upgraded
@@ -36,14 +35,13 @@ public class Tower : MonoBehaviour
     {
         if (tmInstance != null)
         {
-            towerTarget = tmInstance.target;
             tmInstance.towers.Add(this); //Tower is removed from the list when destroyed by the enemies. Done directly by the TM
         }
     }
 
     protected void Update()
     {
-        if (towerTarget != null)
+        if (tmInstance.target != null)
         {
             //Debug.Log("Miss");
             AttackEnemy();
@@ -58,7 +56,7 @@ public class Tower : MonoBehaviour
     protected void AttackEnemy()
     {
         //Get distance and direction
-        directionToEnemy = (Vector2)towerTarget.transform.position - (Vector2)gameObject.transform.position;
+        directionToEnemy = (Vector2)tmInstance.target.transform.position - (Vector2)gameObject.transform.position;
         distanceToEnemy = directionToEnemy.magnitude;
         directionToEnemy.Normalize();
 
@@ -89,7 +87,6 @@ public class Tower : MonoBehaviour
                // Debug.Log("Hit");
                 tmInstance.DetectNewEnemy(col.gameObject);
                 newEnemy.addedToTM = true;
-                towerTarget = tmInstance.target; //Update the tower's target
             }
         }
     }

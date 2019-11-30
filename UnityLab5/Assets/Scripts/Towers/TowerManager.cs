@@ -79,7 +79,7 @@ public class TowerManager : MonoBehaviour
         float distance = 0.0f;
         for(int i =0;i<detectedEnemies.Count;i++)
         {
-            distance = ((Vector2)finalPos.position - (Vector2)detectedEnemies[0].transform.position).magnitude;
+            distance = ((Vector2)finalPos.position - (Vector2)detectedEnemies[i].transform.position).magnitude;
             if (distance < distanceBetweenFinalPosAndEnemy) //We're looking for the minimum
             {
                 distanceBetweenFinalPosAndEnemy = distance;
@@ -87,7 +87,14 @@ public class TowerManager : MonoBehaviour
             }
         }
 
-        target = detectedEnemies[targetIndex];
+        if (targetIndex<detectedEnemies.Count)
+        {
+            target = detectedEnemies[targetIndex];
+        }
+        else
+        {
+            target = null;
+        }
     }
 
     public void EnemyIsDead(GameObject deadEnemy)
