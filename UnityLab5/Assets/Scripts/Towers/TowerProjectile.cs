@@ -16,6 +16,7 @@ public class TowerProjectile : MonoBehaviour
 
     protected void Start()
     {
+        tmInstance = TowerManager.instance;
         rigidBody = gameObject.GetComponent<Rigidbody2D>();
     }
 
