@@ -20,8 +20,18 @@ public class Tower : MonoBehaviour
     protected float detectionRadiusModifier = 3.0f; //Can be upgraded
     public int projectileDamage = 1; //Can be upgraded
 
+    //Leveling up
+    protected int level = 1;
+    protected int currentExp = 0;
+    protected int neededExpForNextLevel = 100;
+    //Level One // Used in case the tower is sold or destroyed and re-bought
+    protected int levelOneExpForNextLevel = 100; 
+    protected float levelOneStartingTimeToNextAttack = 1.5f;
+    protected float levelOneProjectileStartingSpeed = 5.0f;
+    protected float levelOneDetectionRadiusModifier = 3.0f;
+    protected int levelOneProjectileDamage = 1;
 
-    protected void Start()
+    protected void OnEnable() //When the tower is enabled, add it to the TM list
     {
         tmInstance = TowerManager.instance;
         objPooler = ObjectPooler.instance;
@@ -29,13 +39,18 @@ public class Tower : MonoBehaviour
         detectionRadius = gameObject.GetComponent<CircleCollider2D>().radius + detectionRadiusModifier;
         timeToNextAttack = 0.0f;
         projectileSpeed = projectileStartingSpeed;
-    }
 
-    protected void OnEnable() //When the tower is enabled, add it to the TM list
-    {
         if (tmInstance != null)
         {
             tmInstance.towers.Add(this); //Tower is removed from the list when destroyed by the enemies. Done directly by the TM
+            timeToNextAttack = 0.0f;
+            neededExpForNextLevel = levelOneExpForNextLevel;
+            projectileStartingSpeed = levelOneProjectileStartingSpeed;
+            startingTimeToNextAttack = levelOneStartingTimeToNextAttack;
+            detectionRadiusModifier = levelOneDetectionRadiusModifier;
+            projectileDamage = levelOneProjectileDamage;
+            level = 1;
+            currentExp = 0;
         }
     }
 
@@ -43,16 +58,17 @@ public class Tower : MonoBehaviour
     {
         if (tmInstance.target != null)
         {
-            //Debug.Log("Miss");
             AttackEnemy();
         }
     }
 
+    #region selling and buying towers
     protected void SellTower() //Remove from towers list and add money
     {
         //TODO
     }
-
+    #endregion
+    #region Attacking and leveling up
     protected void AttackEnemy()
     {
         //Get distance and direction
@@ -70,6 +86,7 @@ public class Tower : MonoBehaviour
             if (distanceToEnemy <= detectionRadius)
             {
                 projectileObject = objPooler.SpawnFromPool(projectile, gameObject.transform.position, Quaternion.identity).GetComponent<TowerProjectile>();
+                projectileObject.towerReference = this;
                 projectileObject.AttackProperties(directionToEnemy, gameObject.transform.position, detectionRadius, projectileSpeed,projectileDamage);
                 timeToNextAttack = startingTimeToNextAttack;
             }
@@ -77,6 +94,41 @@ public class Tower : MonoBehaviour
         }
     }
 
+    public void LevelUp() //Called by the projectile when an enemy dies
+    {
+        currentExp += 10; //Exp increases by twenty for every kill
+        if(currentExp>=neededExpForNextLevel)
+        {
+            level++;
+
+            switch(level)
+            {
+                case 2:
+                    Debug.Log("Level 2");
+                    startingTimeToNextAttack -= 0.2f;
+                    break;
+                case 3:
+                    Debug.Log("Level 3");
+                    projectileSpeed += 2.0f;
+                    break;
+                case 4:
+                    Debug.Log("Level 4");
+                    detectionRadiusModifier += 1.0f;
+                    break;
+                case 5:
+                    Debug.Log("Level 5");
+                    projectileDamage += 1;
+                    break;
+                case 6:
+                    break;
+            }
+
+            neededExpForNextLevel += 100;
+        }
+    }
+    #endregion
+
+    #region collisions
     protected void OnTriggerEnter2D(Collider2D col)
     {
         if(col.gameObject.tag.Equals("Enemy"))
@@ -90,4 +142,5 @@ public class Tower : MonoBehaviour
             }
         }
     }
+    #endregion
 }

@@ -120,7 +120,8 @@ public class EnemyBehaviour : MonoBehaviour {
 	}
 
 	private void ReachedEnd() {
-        TowerManager.instance.EnemyIsDead(this.gameObject);
+        TowerManager.instance.EnemyIsDead(this.gameObject); //Change the target
+        TowerManager.instance.DestroyTower(); //Destroy one of the towers
         enemySpawner.DespawnEnemy(this);
 		// TODO: add any extra functionality
 	}
@@ -157,7 +158,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	// take damage
 	public bool TakeDamage(int damage, Vector2 towerPosition, float towerRange) {
-        Debug.Log("Got Damaged");
+        //Debug.Log("Got Damaged");
 		wasAttacked = true;
 		towerPos = towerPosition;
 		towerRangeSqr = towerRange * towerRange;

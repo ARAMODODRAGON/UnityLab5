@@ -110,6 +110,17 @@ public class TowerManager : MonoBehaviour
 
         FindTheClosestEnemyToFinalPos(); //Find the next closest enemy
     }
+    
+    public void DestroyTower()
+    {
+        //Destroy one of the towers
+        if (towers.Count > 0)
+        {
+            int towerToDestroy = Random.Range(0, towers.Count - 1);
+            towers[towerToDestroy].gameObject.SetActive(false);
+            towers.RemoveAt(towerToDestroy);
+        }
+    }
 
     #endregion
 }
