@@ -8,7 +8,7 @@ public class Tower : MonoBehaviour
     protected ObjectPooler objPooler;
 
     //Attack
-    protected float startingTimeToNextAttack = 1.2f; //Can be upgraded
+    protected float startingTimeToNextAttack = 0.8f; //Can be upgraded
     protected float timeToNextAttack; //Fire rate
     protected float projectileStartingSpeed = 5.0f; //Can be upgraded
     protected float projectileSpeed;
