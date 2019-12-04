@@ -16,7 +16,8 @@ public class GameMaster : MonoBehaviour
 
 	public static GameMaster instance;
 	// keep track of our current state
-	private GameMasterStates state;
+    [HideInInspector]
+	public GameMasterStates state;
 	// keep track of our money amount
 	private int money;
 	// keep track of how many waves we've been through
@@ -32,7 +33,7 @@ public class GameMaster : MonoBehaviour
 	public Text moneyText;
 	public Text healthText;
 	public Button reset;
-	public Canvas gameOver;
+	public GameObject gameOver;
 
 	private int towerCount;
 
@@ -61,7 +62,9 @@ public class GameMaster : MonoBehaviour
 		state = GameMasterStates.Battle;
 		money = 0;
 		health = 5;
-		// arbitrary number we set for now
+        // arbitrary number we set for now
+
+        gameOver.gameObject.SetActive(false);
 	}
 
 	public void AddMoney(int m)
@@ -105,7 +108,7 @@ public class GameMaster : MonoBehaviour
 	public void AddWave()
 	{
 		waves += 1;
-		Debug.Log("You started a new wave, total is now" + "" + waves);
+
 	}
 	// returns the total kills
 	public int GetKills()
@@ -119,7 +122,7 @@ public class GameMaster : MonoBehaviour
 		if (state == GameMasterStates.Battle)
 		{
 			totalKills += k;
-			Debug.Log("You added a kill, total is now" + "" + totalKills);
+			
 		}
 		else
 		{
@@ -196,7 +199,7 @@ public class GameMaster : MonoBehaviour
 	public void Restart()
 	{
 		if (state == GameMasterStates.GameOver)
-		{
+		{/*
 			gameOver.gameObject.SetActive(false);
 			reset.gameObject.SetActive(false);
 			waves = 1;
@@ -205,6 +208,8 @@ public class GameMaster : MonoBehaviour
 			health = 5;
 			state = GameMasterStates.Rest;
 			StartRound();
+            */
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Level");
 		}
 	}
 
@@ -230,9 +235,9 @@ public class GameMaster : MonoBehaviour
 	//Update the ui relevant to the correct values 
 	public void UpdateUI()
 	{
-		moneyText.text = "Money:" + "" + ReturnMoney();
-		killText.text = "Kills:" + "" + GetKills();
-		waveText.text = "Wave:" + "" + GetWaves();
-		healthText.text = "Health:" + "" + GetHealth();
+		moneyText.text = ReturnMoney().ToString();
+		killText.text = GetKills().ToString();
+		waveText.text = GetWaves().ToString();
+		healthText.text = GetHealth().ToString();
 	}
 }
