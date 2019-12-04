@@ -14,6 +14,7 @@ public class TowerProjectile : MonoBehaviour
     protected int damage;
     protected float lifeTime = 3.0f;
     public Tower towerReference; //Which tower shot this projectile? Used for leveling up purposes
+    public int numberOfAttacks;
 
     protected void Start()
     {
@@ -47,12 +48,16 @@ public class TowerProjectile : MonoBehaviour
         {
             //Debug.Log("BOMM");
             damagedEnemy = col.gameObject.GetComponent<EnemyBehaviour>();
-            if(damagedEnemy.TakeDamage(damage, towerPosition, towerRadius)) //Returns a bool if the enemy is dead
+            numberOfAttacks--;
+            if (damagedEnemy.TakeDamage(damage, towerPosition, towerRadius)) //Returns a bool if the enemy is dead
             {
                 tmInstance.EnemyIsDead(col.gameObject); //if the enemy is dead, tell the tmInstance to recalcualte which enemy is the closes
                 towerReference.LevelUp();
             }
-            gameObject.SetActive(false);
+            if (numberOfAttacks <= 0)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 

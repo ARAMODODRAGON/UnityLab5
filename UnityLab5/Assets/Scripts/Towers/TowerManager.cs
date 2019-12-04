@@ -25,6 +25,8 @@ public class TowerManager : MonoBehaviour
         if(instance==null)
         {
             instance = this;
+            detectedEnemies = new List<GameObject>();
+            towers = new List<Tower>();
         }
         else
         {
@@ -44,8 +46,6 @@ public class TowerManager : MonoBehaviour
 
     void Start()
     {
-        detectedEnemies = new List<GameObject>();
-        towers = new List<Tower>();
         distanceBetweenFinalPosAndEnemy = 0.0f;
     }
 
