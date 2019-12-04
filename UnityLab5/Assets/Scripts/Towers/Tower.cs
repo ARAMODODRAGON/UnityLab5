@@ -8,7 +8,7 @@ public class Tower : MonoBehaviour
     protected ObjectPooler objPooler;
 
     //Attack
-    protected float startingTimeToNextAttack = 1.5f; //Can be upgraded
+    protected float startingTimeToNextAttack = 1.2f; //Can be upgraded
     protected float timeToNextAttack; //Fire rate
     protected float projectileStartingSpeed = 5.0f; //Can be upgraded
     protected float projectileSpeed;
@@ -19,11 +19,13 @@ public class Tower : MonoBehaviour
     protected float detectionRadius;
     protected float detectionRadiusModifier = 3.0f; //Can be upgraded
     public int projectileDamage = 1; //Can be upgraded
+    protected int numberOfAttack = 1; //Becomes 2 after reaching level 6
 
     //Leveling up
     protected int level = 1;
     protected int currentExp = 0;
     protected int neededExpForNextLevel = 100;
+    protected SpriteRenderer spriteRenderer;
     //Level One // Used in case the tower is sold or destroyed and re-bought
     protected int levelOneExpForNextLevel = 100; 
     protected float levelOneStartingTimeToNextAttack = 1.5f;
@@ -31,12 +33,13 @@ public class Tower : MonoBehaviour
     protected float levelOneDetectionRadiusModifier = 3.0f;
     protected int levelOneProjectileDamage = 1;
 
-    protected void OnEnable() //When the tower is enabled, add it to the TM list
+    protected void Start() 
     {
         tmInstance = TowerManager.instance;
         objPooler = ObjectPooler.instance;
         directionToEnemy = Vector2.zero;
         detectionRadius = gameObject.GetComponent<CircleCollider2D>().radius + detectionRadiusModifier;
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         timeToNextAttack = 0.0f;
         projectileSpeed = projectileStartingSpeed;
 
@@ -87,6 +90,8 @@ public class Tower : MonoBehaviour
             {
                 projectileObject = objPooler.SpawnFromPool(projectile, gameObject.transform.position, Quaternion.identity).GetComponent<TowerProjectile>();
                 projectileObject.towerReference = this;
+                projectileObject.numberOfAttacks = numberOfAttack;
+                projectileObject.GetComponent<SpriteRenderer>().color = spriteRenderer.color;
                 projectileObject.AttackProperties(directionToEnemy, gameObject.transform.position, detectionRadius, projectileSpeed,projectileDamage);
                 timeToNextAttack = startingTimeToNextAttack;
             }
@@ -106,20 +111,27 @@ public class Tower : MonoBehaviour
                 case 2:
                     Debug.Log("Level 2");
                     startingTimeToNextAttack -= 0.2f;
+                    spriteRenderer.color = Color.red;
                     break;
                 case 3:
                     Debug.Log("Level 3");
                     projectileSpeed += 2.0f;
+                    spriteRenderer.color = Color.green;
                     break;
                 case 4:
                     Debug.Log("Level 4");
                     detectionRadiusModifier += 1.0f;
+                    spriteRenderer.color = Color.blue;
                     break;
                 case 5:
                     Debug.Log("Level 5");
                     projectileDamage += 1;
+                    spriteRenderer.color = Color.yellow;
                     break;
                 case 6:
+                    Debug.Log("Level 6");
+                    numberOfAttack = 2;
+                    spriteRenderer.color = Color.black;
                     break;
             }
 

@@ -36,6 +36,8 @@ public class EnemySpawner : MonoBehaviour {
 	// timers
 	private float timer = 0f;
 
+
+
 	private void Awake() {
 		// initialize lists
 		allEnemies = new List<EnemyBehaviour>();
@@ -61,7 +63,7 @@ public class EnemySpawner : MonoBehaviour {
 	private void Start() {
 		// TODO: remove this later
 		StartWave(1);
-	}
+    }
 
 	public bool SpawnEnemy(int type) {
 		// first check if you cant spawn one
@@ -129,9 +131,13 @@ public class EnemySpawner : MonoBehaviour {
 			// call end wave
 			EndWave();
 
-			// TODO: remove this later
-			StartWave(waveLevel + 1);
-			Debug.Log("New wave started at level " + waveLevel);
+            // TODO: remove this later
+            if (GameMaster.instance.state != GameMaster.GameMasterStates.GameOver && GameMaster.instance.state != GameMaster.GameMasterStates.Rest)
+            {
+                StartWave(waveLevel + 1);
+                GameMaster.instance.AddWave();
+
+            }
 			// end remove
 		}
 	}

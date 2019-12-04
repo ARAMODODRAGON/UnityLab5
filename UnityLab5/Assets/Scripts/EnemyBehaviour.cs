@@ -49,11 +49,19 @@ public class EnemyBehaviour : MonoBehaviour {
 	private Vector3 nextPoint;
 	public float timeAwake { get; private set; }
 
-	private void Awake() {
+    //Game Master
+    private GameMaster gmInstance;
+
+    private void Awake() {
 		spr = GetComponent<SpriteRenderer>();
 	}
 
-	public void Init(EnemySpawner spawner) {
+    private void Start()
+    {
+        gmInstance = GameMaster.instance;
+    }
+
+    public void Init(EnemySpawner spawner) {
 		enemySpawner = spawner;
 		gameObject.SetActive(false);
 	}
@@ -122,6 +130,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	private void ReachedEnd() {
         TowerManager.instance.EnemyIsDead(this.gameObject); //Change the target
         TowerManager.instance.DestroyTower(); //Destroy one of the towers
+        gmInstance.TakeHealth(1);
         enemySpawner.DespawnEnemy(this);
 		// TODO: add any extra functionality
 	}
@@ -166,8 +175,10 @@ public class EnemyBehaviour : MonoBehaviour {
 		health -= damage;
 		if (health <= 0) {
             enemySpawner.DespawnEnemy(this);
+            gmInstance.AddKills(1);
+            gmInstance.AddMoney(25);
             //Destroy(gameObject);
-			return true;
+            return true;
 		} else {
 			ChangeSpriteAndMultiplier();
 			return false;
